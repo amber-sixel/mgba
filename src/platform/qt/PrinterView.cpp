@@ -81,6 +81,7 @@ void PrinterView::printImage(const QImage& image, int topMargin, int bottomMargi
 	QPainter painter(&pixmap);
 	painter.drawPixmap(0, 0, m_image);
 	painter.drawImage(0, m_image.height() + (topMargin * 16), image);
+	painter.fillRect(0, m_image.height() + (topMargin * 16), image.width(), image.height(), QBrush(QColor(255, 255, 255, 127-exposure)));
 	m_image = pixmap;
 	m_ui.image->setPixmap(m_image.scaled(m_image.size() * m_ui.magnification->value()));
 	m_timer.start();
