@@ -75,7 +75,7 @@ void PrinterView::clear() {
 	m_ui.copyButton->setEnabled(false);
 }
 
-void PrinterView::printImage(const QImage& image) {
+void PrinterView::printImage(const QImage& image, int topMargin, int bottomMargin, int exposure) {
 	QPixmap pixmap(image.width(), image.height() + m_image.height());
 	QPainter painter(&pixmap);
 	painter.drawPixmap(0, 0, m_image);

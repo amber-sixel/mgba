@@ -881,7 +881,7 @@ void CoreController::setupExtPrinter() {
 	connect(this, &CoreController::imagePrinted, this, &CoreController::extPrint);
 }
 
-void CoreController::extPrint(const QImage& image) {
+void CoreController::extPrint(const QImage& image, int topMargin, int bottomMargin, int exposure) {
 	TempProcess* p = new TempProcess();
 	if (!p->m_temp.open()) {
 		delete p;
@@ -918,6 +918,12 @@ void CoreController::attachPrinter() {
 		QGBPrinter* qPrinter = reinterpret_cast<QGBPrinter*>(printer);
 		QImage image(GB_VIDEO_HORIZONTAL_PIXELS, height, QImage::Format_Indexed8);
 		QVector<QRgb> colors;
+		qDebug() << "print command: " 
+			     << " sheets" << printer->sheets
+		         << " top margin" << printer->topMargin 
+			     << " bottom margin" << printer->bottomMargin 
+			     << " palette" << Qt::bin << printer->palette 
+			     << " exposure" << printer->exposure;
 		colors.append(qRgb(0xFF, 0xFF, 0xFF));
 		colors.append(qRgb(0xA8, 0xA8, 0xA8));
 		colors.append(qRgb(0x50, 0x50, 0x50));
@@ -932,7 +938,11 @@ void CoreController::attachPrinter() {
 				image.setPixel(x + 3, y, (byte & 0x03) >> 0);
 			}
 		}
-		QMetaObject::invokeMethod(qPrinter->parent, "imagePrinted", Q_ARG(const QImage&, image));
+		QMetaObject::invokeMethod(qPrinter->parent, "imagePrinted", 
+			Q_ARG(const QImage&, image), 
+			Q_ARG(int, qPrinter->d.topMargin), 
+			Q_ARG(int, qPrinter->d.bottomMargin), 
+			Q_ARG(int, qPrinter->d.exposure));
 	};
 	Interrupter interrupter(this);
 	GBSIOSetDriver(&gb->sio, &m_printer.d.d);
