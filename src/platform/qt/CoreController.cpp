@@ -923,12 +923,6 @@ void CoreController::attachPrinter() {
 		QGBPrinter* qPrinter = reinterpret_cast<QGBPrinter*>(printer);
 		QImage image(GB_VIDEO_HORIZONTAL_PIXELS, height, QImage::Format_Indexed8);
 		QVector<QRgb> colors;
-		qDebug() << "print command: " 
-			     << " sheets" << printer->sheets
-		         << " top margin" << printer->topMargin 
-			     << " bottom margin" << printer->bottomMargin 
-			     << " palette" << Qt::bin << printer->palette 
-			     << " exposure" << printer->exposure;
 		uint8_t gamePalette = qPrinter->d.palette;
 		for (int x = 0; x < 4; ++x) {
 			switch (gamePalette >> 6) { 
