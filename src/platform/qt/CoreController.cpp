@@ -924,10 +924,24 @@ void CoreController::attachPrinter() {
 			     << " bottom margin" << printer->bottomMargin 
 			     << " palette" << Qt::bin << printer->palette 
 			     << " exposure" << printer->exposure;
-		colors.append(qRgb(0xFF, 0xFF, 0xFF));
-		colors.append(qRgb(0xA8, 0xA8, 0xA8));
-		colors.append(qRgb(0x50, 0x50, 0x50));
-		colors.append(qRgb(0x00, 0x00, 0x00));
+		uint8_t gamePalette = qPrinter->d.palette;
+		for (int x = 0; x < 4; ++x) {
+			switch (gamePalette >> 6) { 
+			case 3:
+				colors.append(qRgb(0xFF, 0xFF, 0xFF));
+				break;
+			case 2:
+				colors.append(qRgb(0xA8, 0xA8, 0xA8));
+				break;
+			case 1:
+				colors.append(qRgb(0x50, 0x50, 0x50));
+				break;
+			default:
+				colors.append(qRgb(0x00, 0x00, 0x00));
+				break;
+			}
+			gamePalette = gamePalette << 2;
+		}
 		image.setColorTable(colors);
 		for (int y = 0; y < height; ++y) {
 			for (int x = 0; x < GB_VIDEO_HORIZONTAL_PIXELS; x += 4) {
