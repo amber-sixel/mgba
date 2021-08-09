@@ -901,7 +901,12 @@ void CoreController::extPrint(const QImage& image, int topMargin, int bottomMarg
 		qDebug() << "process error " << error;
 		endPrint();
 	});
-	QStringList list = QProcess::splitCommand(m_extPrintCmd.arg(p->m_temp.fileName()));
+	QString cmdLine = QString(m_extPrintCmd)
+		.replace("%2", QVariant(exposure).toString())
+		.replace("%3", QVariant(topMargin * 16).toString())
+	    .replace("%4", QVariant(bottomMargin * 16).toString())
+		.replace("%1", p->m_temp.fileName());
+	QStringList list = QProcess::splitCommand(cmdLine);
 	QString cmd = list.takeFirst();
 	p->start(cmd, list);
 }
